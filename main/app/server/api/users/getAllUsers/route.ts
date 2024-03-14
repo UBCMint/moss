@@ -1,12 +1,6 @@
 import { db } from "@/app/server/db/index";
 import { NextResponse } from "next/server";
-import { User, users } from "@/app/server/db/schema";
-
-// Create a route in server/api that obtains all the information currently in 
-// the user table under the main database. Return all the data present in the database as JSON.
-
-// Create a method to ensure that the there is actually data present in the Users table in the 
-// first place. Test for the case where no data is present and for the case where there is data present.
+import { User, users } from "@/app/server/db/schema/users";
 
 /**
  * @returns {Promise<Headset[]>}
