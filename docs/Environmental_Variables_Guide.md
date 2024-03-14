@@ -20,7 +20,7 @@ This is all relevant documentation for the Next.js environmental variables, and 
 
 ```
 
-NEXT_PUBLIC_API_ROUTE = https://example.com/api
+NEXT_PUBLIC_API_ROUTE = https://example.com/server/api
 
 ```
 
