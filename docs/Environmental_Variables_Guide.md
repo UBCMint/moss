@@ -1,10 +1,10 @@
-# Backend
+# Environmental Variables
 
 Authors: Trevor Liu
 
 Created: 3/11/2024
 
-Updated: 3/11/2024
+Updated: 3/14/2024
 
 ## Overview
 
@@ -30,6 +30,6 @@ In order to use the key-value pairs, you can directly access your .env file thro
 
 ```
 
-const serverUrl = process.env.SERVER_URL;
+const serverUrl = process.env.NEXT_PUBLIC_API_ROUTE;
 
 ```
