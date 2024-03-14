@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { User, users } from "@/app/server/db/schema/users";
 
 /**
- * @returns {Promise<Headset[]>}
+ * @returns {Promise<User[]>}
  * @description Fetches all users from the database
  */
 async function fetchUsers(): Promise<User[]>{
@@ -20,7 +20,7 @@ async function fetchUsers(): Promise<User[]>{
  * @returns {Promise<Response>}
  * @description Fetches all users from the database and returns a response
  */
-export async function GET(request: Request, response: Response) {
+export async function GET(request: Request, response: Response): Promise<Response> {
     try {
       const usersQuery = await fetchUsers();  
       return NextResponse.json(usersQuery);
