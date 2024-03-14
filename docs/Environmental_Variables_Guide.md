@@ -12,13 +12,15 @@ This is all relevant documentation for the Next.js environmental variables, and 
 
 ## How to use
 
-1. **Create a .ENV file**: Begin by creating a `.ENV` file in the root directory (Same level as `   .env.example`). This file will hold all your environmental variables. Copy the formatting of .ENV.EXAMPLE. *Note* Make sure the .ENV file is included in the .gitignore, so information such as API keys are not posted publically.  
+1. **Create a .ENV file**: Begin by creating a `.ENV` file in the root directory (Same level as `.env.example`). This file will hold all your environmental variables. Copy the formatting of .ENV.EXAMPLE. 
+
+**Note:** Make sure the .ENV file is included in the .gitignore, so information such as API keys are not posted publically.  
 
 2. **Define Environmental Variables**: Inside the `.ENV` file, define your environmental variables in the format `KEY=VALUE`. For example:
 
 ```
 
-SERVER_URL= https://example.com/
+NEXT_PUBLIC_API_ROUTE = https://example.com/api
 
 ```
 
