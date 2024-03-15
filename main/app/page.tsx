@@ -1,6 +1,6 @@
 import { db } from "./server/db"
 import { users } from "./server/db/schema"
-import Env_test from "../components/ui/env_test"
+import Env_test from "../components/ui/EnvTest"
 
 export default async function Home() {
   const data1: any = await db.select();
