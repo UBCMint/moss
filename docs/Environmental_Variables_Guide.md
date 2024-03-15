@@ -27,9 +27,9 @@ NEXT_PUBLIC_API_ROUTE = https://example.com/server/api
 4. **Accessing Environmental Variables in Your Code** 
 
 In order to use the key-value pairs, you can directly access your .env file through 'process.env'.
-
+Example for the headsets route:
 ```
 
-const serverUrl = process.env.NEXT_PUBLIC_API_ROUTE;
+const headsetRoute = `${process.env.NEXT_PUBLIC_API_URL}/headsets`;
 
 ```
