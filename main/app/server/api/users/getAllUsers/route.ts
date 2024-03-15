@@ -1,15 +1,15 @@
 import { db } from '@/app/server/db/index'
 import { NextResponse } from 'next/server'
-import { type Headset, headsets } from '@/app/server/db/schema/headsets'
+import { type User, users } from '@/app/server/db/schema/users'
 
 /**
- * @returns {Promise<Headset[]>}
- * @description Fetches all headsets from the database
+ * @returns {Promise<User[]>}
+ * @description Fetches all users from the database
  */
-async function fetchHeadsets (): Promise<Headset[]> {
+async function fetchUsers (): Promise<User[]> {
   const query = db
     .select()
-    .from(headsets)
+    .from(users)
   const result = await query.execute()
   return result
 }
@@ -18,13 +18,14 @@ async function fetchHeadsets (): Promise<Headset[]> {
  * @param {Request} request
  * @param {Response} response
  * @returns {Promise<Response>}
- * @description Fetches all headsets from the database and returns a response
+ * @description Fetches all users from the database and returns a response
  */
 export async function GET (request: Request, response: Response): Promise<Response> {
   try {
-    const headsetsQuery = await fetchHeadsets()
-    return NextResponse.json(headsetsQuery)
+    const usersQuery = await fetchUsers()
+    return NextResponse.json(usersQuery)
   } catch (error) {
+    console.error(error)
     return NextResponse.error()
   }
 }
