@@ -1,6 +1,7 @@
 import { db } from "@/app/server/db/index";
 import { NextResponse } from "next/server";
 import { Headset, headsets } from "@/app/server/db/schema/headsets";
+import { users } from "../../db/schema/users";
 
 /**
  * @returns {Promise<Headset[]>}
