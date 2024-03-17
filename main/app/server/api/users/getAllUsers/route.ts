@@ -25,7 +25,6 @@ export async function GET (request: Request, response: Response): Promise<Respon
     const usersQuery = await fetchUsers()
     return NextResponse.json(usersQuery)
   } catch (error) {
-    console.error(error)
     return NextResponse.error()
   }
 }
