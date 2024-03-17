@@ -29,7 +29,7 @@ async function deleteAllUsers(): Promise<Response> {
  */
 export async function DELETE(request: Request, response: Response) {
   try {
-    return usersQuery = await deleteAllUsers();  
+    return await deleteAllUsers();  
   } catch (error) {
     console.error(error);
     return NextResponse.error();
