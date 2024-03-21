@@ -1,7 +1,6 @@
 import { db } from "@/app/server/db";
 import { NextResponse } from "next/server";
 import { users } from "@/app/server/db/schema/users";
-import { tree } from "next/dist/build/templates/app-page";
 
 /**
  * @returns {Promise<boolean>}
