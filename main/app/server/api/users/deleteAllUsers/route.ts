@@ -1,12 +1,13 @@
 import { db } from "@/app/server/db";
 import { NextResponse } from "next/server";
 import { users } from "@/app/server/db/schema/users";
+import { tree } from "next/dist/build/templates/app-page";
 
 /**
- * @returns {Promise<Response>}
+ * @returns {Promise<boolean>}
  * @description Deletes all users from the database
  */
-async function deleteAllUsers(): Promise<Response> {
+async function deleteAllUsers(): Promise<boolean> {
   const query = db
     .select()
     .from(users)
@@ -14,11 +15,11 @@ async function deleteAllUsers(): Promise<Response> {
   const result = await query.execute();
   
   if (result.length === 0) {
-    return NextResponse.json({ message: "Data is empty, nothing to delete." }, {status: 404});
-  }
+    return false;
+    }
 
   await db.delete(users);
-  return NextResponse.json({ message: "Users deleted." }, {status: 200});
+  return true;
 }
 
 /**
@@ -29,9 +30,14 @@ async function deleteAllUsers(): Promise<Response> {
  */
 export async function DELETE(request: Request, response: Response) {
   try {
-    return await deleteAllUsers();  
+    const deletionResult = await deleteAllUsers();
+    
+    if (deletionResult) {
+      return NextResponse.json({ message: "Users deleted." }, {status: 200});
+    } else {
+      return NextResponse.json({ message: "Data is empty, nothing to delete." }, {status: 404});
+    }
   } catch (error) {
-    console.error(error);
     return NextResponse.error();
   }
 }
