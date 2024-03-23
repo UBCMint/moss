@@ -94,3 +94,60 @@ export async function DELETE (request: NextApiRequest, response: NextApiResponse
   }
 }
 
+/**
+ * @returns {Promise<boolean>}
+ * @description Updates a headset in the database
+ */
+async function updateHeadset(id, updates) {
+  const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = updates;
+  const existingHeadset = await db
+    .select()
+    .from(headsets)
+    .where(eq(headsets.id, id))
+    .execute();
+
+  if (existingHeadset.length === 0) {
+    return false;
+  }
+
+  await db
+    .update(headsets)
+    .set({
+      ...(name && { name }),
+      ...(description && { description }),
+      ...(channelNumber && { channelNumber }),
+      ...(channelList && { channelList }),
+      ...(purpose && { purpose }),
+      ...(portability && { portability }),
+      ...(price && { price }),
+      ...(company && { company }),
+      ...(batteryLife && { batteryLife }),
+    })
+    .where(eq(headsets.id, id))
+    .execute();
+
+  return true;
+}
+
+/**
+ * @param {NextApiRequest} request
+ * @param {NextApiResponse} response
+ * @returns {Promise<Response>}
+ * @description Updates a headset in the database and returns a response
+ */
+export async function PATCH (request: NextApiRequest, response: NextApiResponse) {
+  const { id, ...updates } = await request.json();
+
+  try {
+    if (typeof id !== 'number') {
+      return new Response('Invalid input for ID', { status: 400 });
+    }
+    const wasUpdated = await updateHeadset(id, updates);
+    if (!wasUpdated) {
+      return new Response('Headset not found', { status: 404 });
+    }
+    return new Response('Headset updated successfully', { status: 200 });
+  } catch (error) {
+    return new Response('Failed to update headset', { status: 500 });
+  }
+}
