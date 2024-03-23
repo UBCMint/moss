@@ -65,7 +65,7 @@ export async function POST (request: NextApiRequest, response: NextApiResponse) 
  * @description Deletes a headset from the database
  */
 async function deleteHeadset (id: number) {
-  await db.delete(headsets).where(headsets.id.eq(id));
+  await db.delete(headsets).where(eq(headsets.id, id));
 }
 
 /**
