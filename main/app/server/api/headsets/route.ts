@@ -2,6 +2,7 @@ import { db } from '@/app/server/db/index'
 import { NextResponse } from 'next/server'
 import { type Headset, headsets } from '@/app/server/db/schema/headsets'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { eq } from 'drizzle-orm'
 
 /**
  * @returns {Promise<Headset[]>}
@@ -44,7 +45,7 @@ async function addHeadset (id: number, name: string, description: string, channe
  * @returns {Promise<Response>}
  * @description Adds a new headset to the database and returns a response
  */
-export async function POST (request: Request, response: Response): Promise<Response> {
+export async function POST (request: NextApiRequest, response: NextApiResponse) {
   const input = await request.json();
   const { id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
 
@@ -53,6 +54,32 @@ export async function POST (request: Request, response: Response): Promise<Respo
     return new Response('Headset added successfully', { status: 200 });
   } catch (error) {
     return new Response('Failed to add headset', { status: 500 });
+  }
+}
+
+/**
+ * @returns null
+ * @description Deletes a headset from the database
+ */
+async function deleteHeadset (id: number) {
+  await db.delete(headsets).where(headsets.id.eq(id));
+}
+
+/**
+ * @param {NextApiRequest} request
+ * @param {NextApiResponse} response
+ * @returns {Promise<Response>}
+ * @description Deletes a headset from the database and returns a response
+ */
+export async function DELETE (request: NextApiRequest, response: NextApiResponse) {
+  const input = await request.json();
+  const { id } = input;
+
+  try {
+    await deleteHeadset(id);
+    return new Response('Headset deleted successfully', { status: 200 });
+  } catch (error) {
+    return new Response('Failed to delete headset', { status: 500 });
   }
 }
 
