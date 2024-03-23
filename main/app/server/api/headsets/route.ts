@@ -50,6 +50,9 @@ export async function POST (request: NextApiRequest, response: NextApiResponse) 
   const { id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
 
   try {    
+    if (typeof id !== 'number' || typeof name !== 'string' || typeof description !== 'string' || typeof channelNumber !== 'number' || typeof channelList !== 'string' || typeof purpose !== 'string' || typeof portability !== 'string' || typeof price !== 'number' || typeof company !== 'string' || typeof batteryLife !== 'string') {
+      return new Response('Invalid input', { status: 400 });
+    }
     await addHeadset(id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife);
     return new Response('Headset added successfully', { status: 200 });
   } catch (error) {
