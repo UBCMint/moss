@@ -32,11 +32,45 @@ export async function GET (request: Request, response: Response): Promise<Respon
 }
 
 /**
+ * @param {number} id
+ * @param {string} name
+ * @param {string} description
+ * @param {number} channelNumber
+ * @param {string} channelList
+ * @param {string} purpose
+ * @param {string} portability
+ * @param {number} price
+ * @param {string} company
+ * @param {string} batteryLife
  * @returns null
  * @description Adds a new headset to the database
  */
-async function addHeadset (id: number, name: string, description: string, channelNumber: number, channelList: string, purpose: string, portability: string, price: number, company: string, batteryLife: string) {
-  await db.insert(headsets).values({id: id, name: name, description: description, channelNumber: channelNumber, channelList: channelList, purpose: purpose, portability: portability, price: price, company: company, batteryLife: batteryLife});
+async function addHeadset (
+  id: number, 
+  name: string, 
+  description: string, 
+  channelNumber: number, 
+  channelList: string, 
+  purpose: string, 
+  portability: string, 
+  price: number, 
+  company: string, 
+  batteryLife: string) {
+
+  await db
+    .insert(headsets)
+    .values({
+      id: id, 
+      name: name, 
+      description: description, 
+      channelNumber: channelNumber, 
+      channelList: channelList, 
+      purpose: purpose, 
+      portability: portability, 
+      price: price, 
+      company: company, 
+      batteryLife: batteryLife
+    });
 }
 
 /**
@@ -45,12 +79,23 @@ async function addHeadset (id: number, name: string, description: string, channe
  * @returns {Promise<Response>}
  * @description Adds a new headset to the database and returns a response
  */
-export async function POST (request: NextApiRequest, response: NextApiResponse) {
+export async function POST (request: NextApiRequest, response: NextApiResponse): Promise<Response> {
   const input = await request.json();
   const { id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
 
   try {    
-    if (typeof id !== 'number' || typeof name !== 'string' || typeof description !== 'string' || typeof channelNumber !== 'number' || typeof channelList !== 'string' || typeof purpose !== 'string' || typeof portability !== 'string' || typeof price !== 'number' || typeof company !== 'string' || typeof batteryLife !== 'string') {
+    if (
+      typeof id !== 'number' || 
+      typeof name !== 'string' || 
+      typeof description !== 'string' || 
+      typeof channelNumber !== 'number' || 
+      typeof channelList !== 'string' || 
+      typeof purpose !== 'string' || 
+      typeof portability !== 'string' || 
+      typeof price !== 'number' || 
+      typeof company !== 'string' || 
+      typeof batteryLife !== 'string'
+      ) {
       return new Response('Invalid input', { status: 400 });
     }
     await addHeadset(id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife);
@@ -61,11 +106,16 @@ export async function POST (request: NextApiRequest, response: NextApiResponse) 
 }
 
 /**
- * @returns null
+ * @param {number} id
+ * @returns {Promise<boolean>}
  * @description Deletes a headset from the database
  */
 async function deleteHeadset (id: number): Promise<boolean> {
-  const result = await db.delete(headsets).where(eq(headsets.id, id)).execute();
+  const result = await db
+    .delete(headsets)
+    .where(eq(headsets.id, id))
+    .execute();
+
   return result.changes > 0;
 }
 
@@ -75,7 +125,7 @@ async function deleteHeadset (id: number): Promise<boolean> {
  * @returns {Promise<Response>}
  * @description Deletes a headset from the database and returns a response
  */
-export async function DELETE (request: NextApiRequest, response: NextApiResponse) {
+export async function DELETE (request: NextApiRequest, response: NextApiResponse): Promise<Response> {
   const { id } = await request.json();
 
   try {
@@ -95,10 +145,12 @@ export async function DELETE (request: NextApiRequest, response: NextApiResponse
 }
 
 /**
+ * @param {number} id
+ * @param {Object} updates
  * @returns {Promise<boolean>}
  * @description Updates a headset in the database
  */
-async function updateHeadset(id, updates) {
+async function updateHeadset(id, updates): Promise<boolean> {
   const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = updates;
   const existingHeadset = await db
     .select()
@@ -135,7 +187,7 @@ async function updateHeadset(id, updates) {
  * @returns {Promise<Response>}
  * @description Updates a headset in the database and returns a response
  */
-export async function PATCH (request: NextApiRequest, response: NextApiResponse) {
+export async function PATCH (request: NextApiRequest, response: NextApiResponse): Promise<Response>{
   const { id, ...updates } = await request.json();
 
   try {
