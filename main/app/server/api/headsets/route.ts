@@ -64,8 +64,9 @@ export async function POST (request: NextApiRequest, response: NextApiResponse) 
  * @returns null
  * @description Deletes a headset from the database
  */
-async function deleteHeadset (id: number) {
-  await db.delete(headsets).where(eq(headsets.id, id));
+async function deleteHeadset (id: number): Promise<boolean> {
+  const result = await db.delete(headsets).where(eq(headsets.id, id)).execute();
+  return result.changes > 0;
 }
 
 /**
@@ -75,12 +76,19 @@ async function deleteHeadset (id: number) {
  * @description Deletes a headset from the database and returns a response
  */
 export async function DELETE (request: NextApiRequest, response: NextApiResponse) {
-  const input = await request.json();
-  const { id } = input;
+  const { id } = await request.json();
 
   try {
-    await deleteHeadset(id);
-    return new Response('Headset deleted successfully', { status: 200 });
+    if (typeof id !== 'number') {
+      return new Response('Invalid input', { status: 400 });
+    }
+    const success = await deleteHeadset(id);
+    if (success) {
+      return new Response('Headset deleted successfully', { status: 200 });
+    } else {
+      return new Response('Headset not found', { status: 404 });
+    }
+    
   } catch (error) {
     return new Response('Failed to delete headset', { status: 500 });
   }
