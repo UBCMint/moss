@@ -1,6 +1,7 @@
 import { db } from '@/app/server/db/index'
 import { NextResponse } from 'next/server'
 import { type Headset, headsets } from '@/app/server/db/schema/headsets'
+import { NextApiRequest, NextApiResponse } from 'next'
 
 /**
  * @returns {Promise<Headset[]>}
@@ -29,9 +30,6 @@ export async function GET (request: Request, response: Response): Promise<Respon
   }
 }
 
-// POST request should add a new row to the database. Ensure the data being added to the 
-// database is of valid type for the specific columns its being added to.
-
 /**
  * @returns null
  * @description Adds a new headset to the database
@@ -40,4 +38,21 @@ async function addHeadset (id: number, name: string, description: string, channe
   await db.insert(headsets).values({id: id, name: name, description: description, channelNumber: channelNumber, channelList: channelList, purpose: purpose, portability: portability, price: price, company: company, batteryLife: batteryLife});
 }
 
+/**
+ * @param {NextApiRequest} request
+ * @param {NextApiResponse} response
+ * @returns {Promise<Response>}
+ * @description Adds a new headset to the database and returns a response
+ */
+export async function POST (request: Request, response: Response): Promise<Response> {
+  const input = await request.json();
+  const { id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
+
+  try {    
+    await addHeadset(id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife);
+    return new Response('Headset added successfully', { status: 200 });
+  } catch (error) {
+    return new Response('Failed to add headset', { status: 500 });
+  }
+}
 
