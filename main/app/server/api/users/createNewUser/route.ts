@@ -10,6 +10,10 @@ import {NextApiRequest, NextApiResponse} from "next";
 let roles = new Set<string>(["Software Engineer", "Product Manager", "Electrical Engineer"])
 
 /**
+ * @param {String} username
+ * @param {String} password
+ * @param {String} email
+ * @param {String} role
  * @returns null
  * @description Adds a new user to the database
  */
