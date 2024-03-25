@@ -32,7 +32,6 @@ export async function GET (request: Request, response: Response): Promise<Respon
 }
 
 /**
- * @param {number} id
  * @param {string} name
  * @param {string} description
  * @param {number} channelNumber
@@ -46,7 +45,6 @@ export async function GET (request: Request, response: Response): Promise<Respon
  * @description Adds a new headset to the database
  */
 async function addHeadset (
-  id: number, 
   name: string, 
   description: string, 
   channelNumber: number, 
@@ -60,7 +58,6 @@ async function addHeadset (
   await db
     .insert(headsets)
     .values({
-      id: id, 
       name: name, 
       description: description, 
       channelNumber: channelNumber, 
@@ -81,11 +78,10 @@ async function addHeadset (
  */
 export async function POST (request: NextApiRequest, response: NextApiResponse): Promise<Response> {
   const input = await request.json();
-  const { id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
+  const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
 
   try {    
     if (
-      typeof id !== 'number' || 
       typeof name !== 'string' || 
       typeof description !== 'string' || 
       typeof channelNumber !== 'number' || 
@@ -98,7 +94,7 @@ export async function POST (request: NextApiRequest, response: NextApiResponse):
       ) {
       return new Response('Invalid input', { status: 400 });
     }
-    await addHeadset(id, name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife);
+    await addHeadset(name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife);
     return new Response('Headset added successfully', { status: 200 });
   } catch (error) {
     return new Response('Failed to add headset', { status: 500 });
