@@ -1,11 +1,9 @@
-import { db } from "./server/db"
-import { users } from "./server/db/schema"
-import Env_test from "../components/ui/EnvTest"
+'use client'
 
-export default async function Home() {
-  const data1: any = await db.select();
-  console.log(data1);
-    
+import React from 'react'
+import Env_test from '../components/ui/EnvTest'
+
+export default function Home (): React.JSX.Element {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
