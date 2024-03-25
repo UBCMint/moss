@@ -141,12 +141,37 @@ export async function DELETE (request: NextApiRequest, response: NextApiResponse
 }
 
 /**
+ * @typedef {Object} HeadsetUpdates
+ * @property {string} name
+ * @property {string} description
+ * @property {number} channelNumber
+ * @property {string} channelList
+ * @property {string} purpose
+ * @property {string} portability
+ * @property {number} price
+ * @property {string} company
+ * @property {string} batteryLife
+ * @description Object containing the updates for a headset
+ */
+interface HeadsetUpdates {
+  name?: string;
+  description?: string;
+  channelNumber?: number;
+  channelList?: string;
+  purpose?: string;
+  portability?: string;
+  price?: number;
+  company?: string;
+  batteryLife?: string;
+}
+
+/**
  * @param {number} id
  * @param {Object} updates
  * @returns {Promise<boolean>}
  * @description Updates a headset in the database
  */
-async function updateHeadset(id, updates): Promise<boolean> {
+async function updateHeadset(id: number, updates: HeadsetUpdates): Promise<boolean> {
   const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = updates;
   const existingHeadset = await db
     .select()
