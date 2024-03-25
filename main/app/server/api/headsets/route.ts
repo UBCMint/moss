@@ -76,7 +76,7 @@ async function addHeadset (
  * @returns {Promise<Response>}
  * @description Adds a new headset to the database and returns a response
  */
-export async function POST (request: NextApiRequest, response: NextApiResponse): Promise<Response> {
+export async function POST (request: Request, response: Response): Promise<Response> {
   const input = await request.json();
   const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
 
@@ -121,7 +121,7 @@ async function deleteHeadset (id: number): Promise<boolean> {
  * @returns {Promise<Response>}
  * @description Deletes a headset from the database and returns a response
  */
-export async function DELETE (request: NextApiRequest, response: NextApiResponse): Promise<Response> {
+export async function DELETE (request: Request, response: Response): Promise<Response> {
   const { id } = await request.json();
 
   try {
@@ -208,7 +208,7 @@ async function updateHeadset(id: number, updates: HeadsetUpdates): Promise<boole
  * @returns {Promise<Response>}
  * @description Updates a headset in the database and returns a response
  */
-export async function PATCH (request: NextApiRequest, response: NextApiResponse): Promise<Response>{
+export async function PATCH (request: Request, response: Response): Promise<Response>{
   const { id, ...updates } = await request.json();
 
   try {
