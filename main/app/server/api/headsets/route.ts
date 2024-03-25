@@ -1,7 +1,6 @@
 import { db } from '@/app/server/db/index'
 import { NextResponse } from 'next/server'
 import { type Headset, headsets } from '@/app/server/db/schema/headsets'
-import { NextApiRequest, NextApiResponse } from 'next'
 import { eq } from 'drizzle-orm'
 
 /**
