@@ -1,9 +1,9 @@
-import type { Config } from "drizzle-kit";
+import type { Config } from 'drizzle-kit'
 export default {
-  schema: "./app/server/db/schema",
-  out: "./drizzle",
-  driver: "better-sqlite",
+  schema: './app/server/db/schema',
+  out: './drizzle',
+  driver: 'better-sqlite',
   dbCredentials: {
-    url: "./main.db"
+    url: './main.db'
   }
-} satisfies Config;
+} satisfies Config
