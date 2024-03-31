@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "drizzle-kit push:sqlite",
-    "db:studio": "npx drizzle-kit studio"
+    "db:studio": "npx drizzle-kit studio",
+    "db:seed": "npx ts-node ./app/server/db/seedDatabase.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
