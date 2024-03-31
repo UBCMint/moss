@@ -1,12 +1,34 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import io from "socket.io-client";
+let socket;
+
 
 export default function Home (): React.JSX.Element {
   /**
    * @TODO Fix type of headsets state
   */
   const [headsets, setHeadsets] = useState([])
+
+
+  const [randomInt, setRandomInt] = useState(0);
+  useEffect(() => {
+    const socketInitializer = async () => {
+
+      // Initialize the socket connection
+    await fetch('http://localhost:3000/server/api/socket');
+    socket = io()
+
+      socket.on("randomNumber", (data: number) => {
+        setRandomInt(data);
+      });
+    };
+
+    socketInitializer();
+
+    // Clean up the socket connection on component unmount
+  }, []);
 
   useEffect(() => {
     const getHeadsets = async (): Promise<void> => {
@@ -41,6 +63,9 @@ export default function Home (): React.JSX.Element {
           <p className="text-2xl p-2 ">
             Welcome to the MINT&apos;s Neurotech Open Source Project. The following are your headset options:
           </p>
+          <div>
+      <h1>Random Integer: {randomInt}</h1>
+    </div>
           {headsets.map((headset: any) => (
               <div key={headset.id}>
                 <p>{headset.name}</p>
