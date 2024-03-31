@@ -6,9 +6,9 @@ import { ServerEventMessage, ServerEventsClient } from "@servicestack/client"
  * @description Connects to event stream and logs the integer received from the server
  */
 const client = new ServerEventsClient("/", ["*"], {
-    onMessage: (msg:ServerEventMessage) => {
-        if (msg.selector === "cmd.onInteger") {
-            console.log("Received integer:", msg.json)
+    handlers: {
+        onInteger: (msg: ServerEventMessage) => {
+            console.log("Received integer:", msg);
         }
     },
     onException: (e:Error) => console.error("Error:", e),
