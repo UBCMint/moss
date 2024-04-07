@@ -1,9 +1,6 @@
-import { db } from './index';
-import { type User, users } from './schema/users';
+import { db} from '@/app/server/db/index'
+import { type User, users } from './schema/users'
 
-/**
- * Generates random data for 10 users
- */
 
 let numberOfUsers = 10;
 let randomUserUsernames: string[] = [
@@ -19,10 +16,20 @@ let randomUserRoles: string[] = [
     "UX Designer", "Signals Engineer", "Data Scientist", "Neuroscience Researcher", "Clinician"
 ]
 
-for (let i: number = 0; i < numberOfUsers; i++) {
-    db.insert(users).values({
-        username: randomUserUsernames[i], 
-        password: randomUserPasswords[i], 
-        email: randomUserUsernames[i] + "" + "@mail.com", 
-        role: randomUserRoles[i]});
+/**
+ * @returns null
+ * @description Generates random data for 10 users
+ */
+
+async function seedDatabase () {
+    for (let i: number = 0; i < numberOfUsers; i++) {
+        await db.insert(users).values({
+            username: randomUserUsernames[i], 
+            password: randomUserPasswords[i], 
+            email: randomUserUsernames[i] + "" + "@mail.com", 
+            role: randomUserRoles[i]});
+    }
 }
+
+seedDatabase();
+
