@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { subscribeToIntegers } from "./server/api/utils/dataStream";
 
+import Link from 'next/link';
+
 export default function Home(): React.JSX.Element {
   /**
    * @TODO Fix type of headsets state
@@ -55,8 +57,13 @@ export default function Home(): React.JSX.Element {
           </p>
           {headsets.map((headset: any) => (
             <div key={headset.id}>
-              <p>{headset.name}</p>
+              <Link href={`/headset/${headset.name}`}>
+                <button>
+                  <p>{headset.name}</p>
+                </button>
+              </Link>
             </div>
+            
           ))}
           <div>
             <h2 className="text-2xl p-2">Integer Stream:</h2>
