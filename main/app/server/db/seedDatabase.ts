@@ -1,5 +1,5 @@
 import { db } from './index';
-import { type User, users } from '@/app/server/db/schema/users';
+import { type User, users } from './schema/users';
 
 /**
  * Generates random data for 10 users
