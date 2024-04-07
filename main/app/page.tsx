@@ -79,9 +79,11 @@ export default function Home(): React.JSX.Element {
               <p key={index}>{integer}</p>
             ))} */}
             {/* <h2 className="text-2xl p-2">EEG Data Stream:</h2> */}
+            {eegData.length > 0 && (
+              <p>EEG Channel Size: {eegData[0].eegChannelSize}</p>
+            )}
             {eegData.map((data, index) => (
               <div key={index}>
-                <p>EEG Channel Size: {data.eegChannelSize}</p>
                 <p>N Channels Vector: {data.nChannelsVector.join(", ")}</p>
               </div>
             ))}
