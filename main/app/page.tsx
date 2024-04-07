@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { subscribeToIntegers } from "./server/api/utils/dataStream";
+import {
+  subscribeToIntegers,
+  subscribeToEEGData,
+} from "./server/api/utils/dataStream";
+
+interface EEGData {
+  nChannelsVector: number[];
+  eegChannelSize: number;
+}
 
 export default function Home(): React.JSX.Element {
   /**
@@ -9,6 +17,7 @@ export default function Home(): React.JSX.Element {
    */
   const [headsets, setHeadsets] = useState([]);
   const [integers, setIntegers] = useState<number[]>([]);
+  const [eegData, setEegData] = useState<EEGData[]>([]);
 
   useEffect(() => {
     const getHeadsets = async (): Promise<void> => {
@@ -32,11 +41,17 @@ export default function Home(): React.JSX.Element {
       console.log(`error: ${error.message}`);
     });
 
-    // Subscribe to the integer stream
-    // callback function called every time a new integer is received
-    const cleanup = subscribeToIntegers((integer) => {
-      // adds new integer to the last 99 integers
-      setIntegers((prevIntegers) => [...prevIntegers.slice(-99), integer]);
+    //   // Subscribe to the integer stream
+    //   // callback function called every time a new integer is received
+    //   const cleanup = subscribeToIntegers((integer) => {
+    //     // adds new integer to the last 99 integers
+    //     setIntegers((prevIntegers) => [...prevIntegers.slice(-99), integer]);
+    //   });
+
+    //   return () => cleanup(); // Clean up on component unmount
+    // }, []);
+    const cleanup = subscribeToEEGData((newData: EEGData) => {
+      setEegData((prevData) => [...prevData, newData]);
     });
 
     return () => cleanup(); // Clean up on component unmount
@@ -59,9 +74,16 @@ export default function Home(): React.JSX.Element {
             </div>
           ))}
           <div>
-            <h2 className="text-2xl p-2">Integer Stream:</h2>
+            {/* <h2 className="text-2xl p-2">Integer Stream:</h2>
             {integers.map((integer, index) => (
               <p key={index}>{integer}</p>
+            ))} */}
+            {/* <h2 className="text-2xl p-2">EEG Data Stream:</h2> */}
+            {eegData.map((data, index) => (
+              <div key={index}>
+                <p>EEG Channel Size: {data.eegChannelSize}</p>
+                <p>N Channels Vector: {data.nChannelsVector.join(", ")}</p>
+              </div>
             ))}
           </div>
         </div>

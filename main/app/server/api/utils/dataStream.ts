@@ -31,3 +31,25 @@ export const subscribeToIntegers = (callback: (integer: number) => void) => {
     // clean up
     return () => clearInterval(intervalId)
 }
+
+/**
+ * @param {EEGDATA} eegData
+ * @returns {void}
+ * @description Subscribes to EEG data, sends out updates with a vector of size nChannels * 1
+ */
+export const subscribeToEEGData = (callback: (eegData: EEGDATA) => void) => {
+    const nChannels = 64;
+    let counter = 0;
+    const intervalId = setInterval(() => {
+        // create a vector [counter, counter+1, ..., counter+nChannels-1]
+        const nChannelsVector = new Array(nChannels).fill(1).map((_, index) => index + counter); 
+    callback({
+      eegChannelSize: nChannels,
+      nChannelsVector
+    });
+    counter += nChannels;
+  }, 10);
+
+  // clean up
+  return () => clearInterval(intervalId);
+};
