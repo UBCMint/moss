@@ -17,8 +17,8 @@ export default function Home (): React.JSX.Element {
     const socketInitializer = async () => {
 
       // Initialize the socket connection
-    await fetch('http://localhost:3000/server/api/socket');
-    socket = io()
+    // await fetch('http://localhost:3000/server/api/socket');
+    socket = io('http://localhost:3000/server/api/socket');
 
       socket.on("randomNumber", (data: number) => {
         setRandomInt(data);
