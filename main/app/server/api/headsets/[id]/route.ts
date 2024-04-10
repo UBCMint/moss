@@ -10,9 +10,15 @@ import { eq } from 'drizzle-orm'
  * @returns {Promise<Response>}
  * @description Fetches a headset by id from the database and returns a response
  */
-export async function GET(request: NextApiRequest, response: NextApiResponse): Promise<Response> {
+export async function GET (request: NextApiRequest, response: NextApiResponse): Promise<Response> {
   try {
-    const id = request.url.split('/').pop() as string
+    if (request.url === undefined) {
+      return NextResponse.json({ error: 'No ID provided' }, { status: 400 })
+    }
+    const id = request.url.split('/').pop()?.toString()
+    if (id === undefined) {
+      return NextResponse.json({ error: 'No ID provided' }, { status: 400 })
+    }
     const numberId = parseInt(id)
     if (isNaN(numberId)) {
       return NextResponse.json({ error: 'Invalid ID provided' }, { status: 400 })
