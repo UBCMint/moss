@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm'
  * @returns {Promise<Headset[]>}
  * @description Fetches all headsets from the database
  */
-async function fetchHeadsets(): Promise<Headset[]> {
+async function fetchHeadsets (): Promise<Headset[]> {
   const query = db
     .select()
     .from(headsets)
@@ -21,7 +21,7 @@ async function fetchHeadsets(): Promise<Headset[]> {
  * @returns {Promise<Response>}
  * @description Fetches all headsets from the database and returns a response
  */
-export async function GET(request: Request, response: Response): Promise<Response> {
+export async function GET (request: Request, response: Response): Promise<Response> {
   try {
     const headsetsQuery = await fetchHeadsets()
     return NextResponse.json(headsetsQuery)
@@ -43,7 +43,7 @@ export async function GET(request: Request, response: Response): Promise<Respons
  * @returns null
  * @description Adds a new headset to the database
  */
-async function addHeadset(
+async function addHeadset (
   name: string,
   description: string,
   channelNumber: number,
@@ -52,21 +52,20 @@ async function addHeadset(
   portability: string,
   price: number,
   company: string,
-  batteryLife: string) {
-
+  batteryLife: string): Promise<void> {
   await db
     .insert(headsets)
     .values({
-      name: name,
-      description: description,
-      channelNumber: channelNumber,
-      channelList: channelList,
-      purpose: purpose,
-      portability: portability,
-      price: price,
-      company: company,
-      batteryLife: batteryLife
-    });
+      name,
+      description,
+      channelNumber,
+      channelList,
+      purpose,
+      portability,
+      price,
+      company,
+      batteryLife
+    })
 }
 
 /**
@@ -75,9 +74,9 @@ async function addHeadset(
  * @returns {Promise<Response>}
  * @description Adds a new headset to the database and returns a response
  */
-export async function POST(request: Request, response: Response): Promise<Response> {
-  const input = await request.json();
-  const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input;
+export async function POST (request: Request, response: Response): Promise<Response> {
+  const input = await request.json()
+  const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = input
 
   try {
     if (
@@ -91,12 +90,12 @@ export async function POST(request: Request, response: Response): Promise<Respon
       typeof company !== 'string' ||
       typeof batteryLife !== 'string'
     ) {
-      return new Response('Invalid input', { status: 400 });
+      return new Response('Invalid input', { status: 400 })
     }
-    await addHeadset(name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife);
-    return new Response('Headset added successfully', { status: 200 });
+    await addHeadset(name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife)
+    return new Response('Headset added successfully', { status: 200 })
   } catch (error) {
-    return new Response('Failed to add headset', { status: 500 });
+    return new Response('Failed to add headset', { status: 500 })
   }
 }
 
@@ -105,13 +104,13 @@ export async function POST(request: Request, response: Response): Promise<Respon
  * @returns {Promise<boolean>}
  * @description Deletes a headset from the database
  */
-async function deleteHeadset(id: number): Promise<boolean> {
+async function deleteHeadset (id: number): Promise<boolean> {
   const result = await db
     .delete(headsets)
     .where(eq(headsets.id, id))
-    .execute();
+    .execute()
 
-  return result.changes > 0;
+  return result.changes > 0
 }
 
 /**
@@ -120,22 +119,21 @@ async function deleteHeadset(id: number): Promise<boolean> {
  * @returns {Promise<Response>}
  * @description Deletes a headset from the database and returns a response
  */
-export async function DELETE(request: Request, response: Response): Promise<Response> {
-  const { id } = await request.json();
+export async function DELETE (request: Request, response: Response): Promise<Response> {
+  const { id } = await request.json()
 
   try {
     if (typeof id !== 'number') {
-      return new Response('Invalid input', { status: 400 });
+      return new Response('Invalid input', { status: 400 })
     }
-    const success = await deleteHeadset(id);
+    const success = await deleteHeadset(id)
     if (success) {
-      return new Response('Headset deleted successfully', { status: 200 });
+      return new Response('Headset deleted successfully', { status: 200 })
     } else {
-      return new Response('Headset not found', { status: 404 });
+      return new Response('Headset not found', { status: 404 })
     }
-
   } catch (error) {
-    return new Response('Failed to delete headset', { status: 500 });
+    return new Response('Failed to delete headset', { status: 500 })
   }
 }
 
@@ -153,15 +151,15 @@ export async function DELETE(request: Request, response: Response): Promise<Resp
  * @description Object containing the updates for a headset
  */
 interface HeadsetUpdates {
-  name?: string;
-  description?: string;
-  channelNumber?: number;
-  channelList?: string;
-  purpose?: string;
-  portability?: string;
-  price?: number;
-  company?: string;
-  batteryLife?: string;
+  name?: string
+  description?: string
+  channelNumber?: number
+  channelList?: string
+  purpose?: string
+  portability?: string
+  price?: number
+  company?: string
+  batteryLife?: string
 }
 
 /**
@@ -170,35 +168,35 @@ interface HeadsetUpdates {
  * @returns {Promise<boolean>}
  * @description Updates a headset in the database
  */
-async function updateHeadset(id: number, updates: HeadsetUpdates): Promise<boolean> {
-  const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = updates;
+async function updateHeadset (id: number, updates: HeadsetUpdates): Promise<boolean> {
+  const { name, description, channelNumber, channelList, purpose, portability, price, company, batteryLife } = updates
   const existingHeadset = await db
     .select()
     .from(headsets)
     .where(eq(headsets.id, id))
-    .execute();
+    .execute()
 
   if (existingHeadset.length === 0) {
-    return false;
+    return false
   }
 
   await db
     .update(headsets)
     .set({
-      ...(name && { name }),
-      ...(description && { description }),
-      ...(channelNumber && { channelNumber }),
-      ...(channelList && { channelList }),
-      ...(purpose && { purpose }),
-      ...(portability && { portability }),
-      ...(price && { price }),
-      ...(company && { company }),
-      ...(batteryLife && { batteryLife }),
+      ...((name != null) && { name }),
+      ...((description != null) && { description }),
+      ...((channelNumber != null) && { channelNumber }),
+      ...((channelList != null) && { channelList }),
+      ...((purpose != null) && { purpose }),
+      ...((portability != null) && { portability }),
+      ...((price != null) && { price }),
+      ...((company != null) && { company }),
+      ...((batteryLife != null) && { batteryLife })
     })
     .where(eq(headsets.id, id))
-    .execute();
+    .execute()
 
-  return true;
+  return true
 }
 
 /**
@@ -207,19 +205,19 @@ async function updateHeadset(id: number, updates: HeadsetUpdates): Promise<boole
  * @returns {Promise<Response>}
  * @description Updates a headset in the database and returns a response
  */
-export async function PATCH(request: Request, response: Response): Promise<Response> {
-  const { id, ...updates } = await request.json();
+export async function PATCH (request: Request, response: Response): Promise<Response> {
+  const { id, ...updates } = await request.json()
 
   try {
     if (typeof id !== 'number') {
-      return new Response('Invalid input for ID', { status: 400 });
+      return new Response('Invalid input for ID', { status: 400 })
     }
-    const wasUpdated = await updateHeadset(id, updates);
+    const wasUpdated = await updateHeadset(id, updates)
     if (!wasUpdated) {
-      return new Response('Headset not found', { status: 404 });
+      return new Response('Headset not found', { status: 404 })
     }
-    return new Response('Headset updated successfully', { status: 200 });
+    return new Response('Headset updated successfully', { status: 200 })
   } catch (error) {
-    return new Response('Failed to update headset', { status: 500 });
+    return new Response('Failed to update headset', { status: 500 })
   }
 }

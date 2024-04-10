@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from "react";
-import { subscribeToEEGData } from "./server/api/utils/dataStream";
+import React, { useState, useEffect } from 'react'
+import { subscribeToEEGData } from './server/api/utils/dataStream'
 
 interface EEGData {
-  nChannelsVector: number[];
-  eegChannelSize: number;
+  nChannelsVector: number[]
+  eegChannelSize: number
 }
 
-export default function Home(): React.JSX.Element {
+export default function Home (): React.JSX.Element {
   /**
    * @TODO Fix type of headsets state
    */
-  const [headsets, setHeadsets] = useState([]);
-  const [eegData, setEegData] = useState<EEGData[]>([]);
+  const [headsets, setHeadsets] = useState([])
+  const [eegData, setEegData] = useState<EEGData[]>([])
 
   useEffect(() => {
     const getHeadsets = async (): Promise<void> => {
@@ -21,28 +21,28 @@ export default function Home(): React.JSX.Element {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_ROUTE}/headsets`,
           {
-            method: "GET",
+            method: 'GET',
             headers: {
-              "Content-Type": "application/json",
-            },
+              'Content-Type': 'application/json'
+            }
           }
-        );
-        const data = await response.json();
-        setHeadsets(data);
+        )
+        const data = await response.json()
+        setHeadsets(data)
       } catch (error: any) {
-        console.log(`error: ${error.message}`);
+        console.log(`error: ${error.message}`)
       }
-    };
+    }
     getHeadsets().catch((error) => {
-      console.log(`error: ${error.message}`);
-    });
+      console.log(`error: ${error.message}`)
+    })
 
     const cleanup = subscribeToEEGData((newData: EEGData) => {
-      setEegData((prevData) => [...prevData, newData]);
-    });
+      setEegData((prevData) => [...prevData, newData])
+    })
 
-    return () => cleanup(); // Clean up on component unmount
-  }, []);
+    return () => { cleanup() }
+  }, [])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -66,12 +66,12 @@ export default function Home(): React.JSX.Element {
             )}
             {eegData.map((data, index) => (
               <div key={index}>
-                <p>N Channels Vector: {data.nChannelsVector.join(", ")}</p>
+                <p>N Channels Vector: {data.nChannelsVector.join(', ')}</p>
               </div>
             ))}
           </div>
         </div>
       </div>
     </main>
-  );
+  )
 }

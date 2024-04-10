@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import EnvTest from '../../../components/EnvTest/EnvTest'
+import EnvTest from '@/components/EnvTest/EnvTest'
 
 export default function Home (): React.JSX.Element {
   return (
