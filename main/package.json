@@ -2,6 +2,7 @@
   "name": "main",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,16 +10,17 @@
     "lint": "next lint",
     "db:push": "drizzle-kit push:sqlite",
     "db:studio": "npx drizzle-kit studio",
-    "db:seed": "node --loader esbuild-register/loader -r esbuild-register ./app/server/db/seedDatabase.ts"
+    "db:seed": "npx tsx  ./app/server/db/seedDatabase"
   },
   "dependencies": {
+    "@libsql/client": "^0.6.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@servicestack/client": "^2.1.2",
     "better-sqlite3": "^9.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.29.4",
+    "drizzle-orm": "^0.29.5",
     "embla-carousel-react": "^8.0.0",
     "eventsource": "^2.0.2",
     "lucide-react": "^0.344.0",
@@ -35,7 +37,7 @@
     "@types/react-dom": "^18",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "autoprefixer": "^10.0.1",
-    "drizzle-kit": "^0.20.14",
+    "drizzle-kit": "^0.20.17",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.1.2",
     "eslint-config-standard-with-typescript": "^43.0.1",
