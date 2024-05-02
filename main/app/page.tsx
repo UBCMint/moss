@@ -41,18 +41,17 @@ export default function Home(): React.JSX.Element {
 
     const smoothie = new SmoothieChart({
 
+      // minValue: -50, 
+      // maxValue: 50,
+
       grid: {
-
-        lineWidth: 1, // Width of grid lines
+        lineWidth: 2, // Increase the width of grid lines
         millisPerLine: 1000, // Milliseconds per grid line
-        verticalSections: 4,// Number of vertical sections
-
-
+        verticalSections: 6, // Increase the number of vertical sections
       },
       labels: {
         fontSize: 15, // Font size of labels
         precision: 2 // Precision of values displayed on the y-axis
-
       }
     });
     smoothie.addTimeSeries(timeSeries.current);
