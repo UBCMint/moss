@@ -42,7 +42,7 @@ export default function Home(): React.JSX.Element {
     const smoothie = new SmoothieChart({
 
       // minValue: -50, 
-      // maxValue: 50,
+      // maxValue: 50, // Set a maximum value for the y-axis
 
       grid: {
         lineWidth: 2, // Increase the width of grid lines
