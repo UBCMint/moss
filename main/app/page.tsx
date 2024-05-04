@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect, useRef } from 'react';
-import { TimeSeries, SmoothieChart } from 'smoothie';
-import { subscribeToEEGData } from './server/api/utils/dataStream';
+import React, { useState, useEffect, useRef } from 'react'
+import { TimeSeries, SmoothieChart } from 'smoothie'
+import { subscribeToEEGData } from './server/api/utils/dataStream'
 
 interface EEGData {
-  nChannelsVector: number[];
-  eegChannelSize: number;
+  nChannelsVector: number[]
+  eegChannelSize: number
 }
 
-export default function Home(): React.JSX.Element {
-  const [headsets, setHeadsets] = useState([]);
-  const [eegData, setEegData] = useState<EEGData[]>([]);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const timeSeries = useRef<TimeSeries>();
+export default function Home (): React.JSX.Element {
+  const [headsets, setHeadsets] = useState([])
+  const [eegData, setEegData] = useState<EEGData[]>([])
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const timeSeries = useRef<TimeSeries>()
 
   useEffect(() => {
     const getHeadsets = async (): Promise<void> => {
@@ -26,55 +26,51 @@ export default function Home(): React.JSX.Element {
               'Content-Type': 'application/json'
             }
           }
-        );
-        const data = await response.json();
-        setHeadsets(data);
+        )
+        const data = await response.json()
+        setHeadsets(data)
       } catch (error: any) {
-        console.log(`error: ${error.message}`);
+        console.log(`error: ${error.message}`)
       }
-    };
+    }
     getHeadsets().catch((error) => {
-      console.log(`error: ${error.message}`);
-    });
+      console.log(`error: ${error.message}`)
+    })
 
     timeSeries.current = new TimeSeries()
 
     const smoothie = new SmoothieChart({
-
-      // minValue: -50, 
-      // maxValue: 50, // Set a maximum value for the y-axis
-
       grid: {
         lineWidth: 2, // Increase the width of grid lines
         millisPerLine: 1000, // Milliseconds per grid line
-        verticalSections: 6, // Increase the number of vertical sections
+        verticalSections: 6 // Increase the number of vertical sections
       },
       labels: {
         fontSize: 15, // Font size of labels
         precision: 2 // Precision of values displayed on the y-axis
       }
-    });
-    smoothie.addTimeSeries(timeSeries.current);
-    smoothie.streamTo(canvasRef.current!, 1000); // 1000ms interval for streaming
+    })
+    smoothie.addTimeSeries(timeSeries.current)
+    smoothie.streamTo(canvasRef.current!, 1000) // 1000ms interval for streaming
     return () => {
-      smoothie.stop();
-    };
-  }, []);
+      smoothie.stop()
+    }
+  }, [])
 
   useEffect(() => {
     const cleanup = subscribeToEEGData((newData: EEGData) => {
-      setEegData((prevData) => [...prevData, newData]);
+      setEegData((prevData) => [...prevData, newData])
       if (timeSeries.current) {
         newData.nChannelsVector.forEach((value, index) => {
-          timeSeries.current?.append(new Date().getTime(), value);
-        });
+          timeSeries.current?.append(new Date().getTime(), value)
+        })
       }
-    });
+    })
 
     return () => {
-      cleanup();
-    };
-  }, []);
+      cleanup()
+    }
+  }, [])
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -106,5 +102,5 @@ export default function Home(): React.JSX.Element {
         </div>
       </div>
     </main>
-  );
-}  
+  )
+}
