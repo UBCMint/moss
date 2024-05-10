@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import { TimeSeries, SmoothieChart } from 'smoothie'
 import { subscribeToEEGData } from './server/api/utils/dataStream'
 
 interface EEGData {
@@ -9,11 +10,10 @@ interface EEGData {
 }
 
 export default function Home (): React.JSX.Element {
-  /**
-   * @TODO Fix type of headsets state
-   */
   const [headsets, setHeadsets] = useState([])
   const [eegData, setEegData] = useState<EEGData[]>([])
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const timeSeries = useRef<TimeSeries>()
 
   useEffect(() => {
     const getHeadsets = async (): Promise<void> => {
@@ -37,11 +37,39 @@ export default function Home (): React.JSX.Element {
       console.log(`error: ${error.message}`)
     })
 
+    timeSeries.current = new TimeSeries()
+
+    const smoothie = new SmoothieChart({
+      grid: {
+        lineWidth: 2, // Increase the width of grid lines
+        millisPerLine: 1000, // Milliseconds per grid line
+        verticalSections: 6 // Increase the number of vertical sections
+      },
+      labels: {
+        fontSize: 15, // Font size of labels
+        precision: 2 // Precision of values displayed on the y-axis
+      }
+    })
+    smoothie.addTimeSeries(timeSeries.current)
+    smoothie.streamTo(canvasRef.current!, 1000) // 1000ms interval for streaming
+    return () => {
+      smoothie.stop()
+    }
+  }, [])
+
+  useEffect(() => {
     const cleanup = subscribeToEEGData((newData: EEGData) => {
       setEegData((prevData) => [...prevData, newData])
+      if (timeSeries.current) {
+        newData.nChannelsVector.forEach((value, index) => {
+          timeSeries.current?.append(new Date().getTime(), value)
+        })
+      }
     })
 
-    return () => { cleanup() }
+    return () => {
+      cleanup()
+    }
   }, [])
 
   return (
@@ -66,9 +94,10 @@ export default function Home (): React.JSX.Element {
             )}
             {eegData.map((data, index) => (
               <div key={index}>
-                <p>N Channels Vector: {data.nChannelsVector.join(', ')}</p>
+                {/* <p>N Channels Vector: {data.nChannelsVector.join(', ')}</p> */}
               </div>
             ))}
+            <canvas ref={canvasRef} width={1000} height={500} />
           </div>
         </div>
       </div>
