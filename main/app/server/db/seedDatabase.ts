@@ -1,7 +1,15 @@
-import { db } from "@/app/server/db/index";
+import { db, sqlite } from "@/app/server/db/index";
+import {
+  drizzle,
+  type BetterSQLite3Database,
+} from "drizzle-orm/better-sqlite3";
 import { users } from "@/app/server/db/schema";
 import fs from "fs/promises";
 import * as readline from "readline";
+import Database from "better-sqlite3";
+
+let sqlite: Database;
+let db: BetterSQLite3Database;
 
 const numberOfUsers = 10;
 const randomUserUsernames: string[] = [
@@ -66,22 +74,31 @@ const promptUser = async (query: string): Promise<string> => {
   });
 };
 
-async function resetDB(filePath: string) {
-  try {
-    const fileExists = await fs
-      .access(filePath)
-      .then(() => true)
-      .catch(() => false);
+function initializeDatabase() {
+  sqlite = new Database("main.db");
+  db = drizzle(sqlite);
+}
 
-    if (fileExists) {
-      console.log("deletrting")
-
-      await fs.unlink(filePath);
-    }
-  } catch (err) {
-    console.error('Error deleting file:', err);
+function closeDatabase() {
+  if (sqlite) {
+    sqlite.close();
   }
 }
+
+async function resetDB(filePath: string, retries: number = 3) {
+  try {
+    closeDatabase();
+    try {
+      await fs.unlink(filePath);
+      return;
+    } catch (err) {
+      console.error("Error deleting file:", err);
+    }
+  } catch (err) {
+    console.error("Error deleting file:", err);
+  }
+}
+
 const seedDatabase = async (): Promise<void> => {
   const input = await promptUser(
     "This script will reset the database. Do you want to proceed? [y/n] "
@@ -93,8 +110,20 @@ const seedDatabase = async (): Promise<void> => {
       // await db.delete(users)
 
       await resetDB("./main.db");
+      initializeDatabase();
 
-      // void addUsers();
+      const createUsersTableQuery = `
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY,
+      username TEXT NOT NULL,
+      password TEXT NOT NULL,
+      email TEXT NOT NULL,
+      role TEXT NOT NULL
+    )
+  `;
+      sqlite.exec(createUsersTableQuery);
+
+      void addUsers();
       console.log("✅ Database seeded successfully.");
       break;
     case "n":
