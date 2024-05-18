@@ -1,15 +1,9 @@
-import { db, sqlite } from "@/app/server/db/index";
-import {
-  drizzle,
-  type BetterSQLite3Database,
-} from "drizzle-orm/better-sqlite3";
+import { db } from "@/app/server/db/index";
 import { users } from "@/app/server/db/schema";
-import fs from "fs/promises";
 import * as readline from "readline";
+import * as fs from "fs/promises";
 import Database from "better-sqlite3";
-
-let sqlite: Database;
-let db: BetterSQLite3Database;
+import { drizzle } from "drizzle-orm/better-sqlite3";
 
 const numberOfUsers = 10;
 const randomUserUsernames: string[] = [
@@ -49,12 +43,12 @@ const randomUserRoles: string[] = [
   "Clinician",
 ];
 
-async function addUsers(): Promise<void> {
-  for (let i: number = 0; i < numberOfUsers; i++) {
+async function addUsers(db): Promise<void> {
+  for (let i = 0; i < numberOfUsers; i++) {
     await db.insert(users).values({
       username: randomUserUsernames[i],
       password: randomUserPasswords[i],
-      email: randomUserUsernames[i] + "" + "@mail.com",
+      email: randomUserUsernames[i] + "@mail.com",
       role: randomUserRoles[i],
     });
   }
@@ -74,29 +68,43 @@ const promptUser = async (query: string): Promise<string> => {
   });
 };
 
-function initializeDatabase() {
-  sqlite = new Database("main.db");
-  db = drizzle(sqlite);
-}
-
-function closeDatabase() {
-  if (sqlite) {
-    sqlite.close();
-  }
-}
-
-async function resetDB(filePath: string, retries: number = 3) {
+async function deleteDatabase(): Promise<void> {
+  console.log("🗑️ Deleting existing database...");
   try {
-    closeDatabase();
-    try {
-      await fs.unlink(filePath);
-      return;
-    } catch (err) {
-      console.error("Error deleting file:", err);
+    await fs.access("main.db");
+    await fs.unlink("main.db");
+    console.log("✅ Existing database deleted successfully.");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      console.log("🚫 Database file not found.");
+    } else {
+      console.error("❌ Error deleting database:", error);
     }
-  } catch (err) {
-    console.error("Error deleting file:", err);
   }
+}
+
+async function recreateDatabase(): Promise<Database> {
+  console.log("🔄 Recreating the database...");
+  await deleteDatabase(); // Delete existing database
+  console.log("📁 Creating new database file...");
+
+  // Initialize the database and create the users table
+  const sqlite = new Database("main.db");
+  const db = drizzle(sqlite);
+
+  const createUsersTableQuery = `
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY,
+      username TEXT NOT NULL,
+      password TEXT NOT NULL,
+      email TEXT NOT NULL,
+      role TEXT NOT NULL
+    )
+  `;
+  sqlite.exec(createUsersTableQuery);
+  console.log("✅ Users table created successfully.");
+
+  return db;
 }
 
 const seedDatabase = async (): Promise<void> => {
@@ -107,23 +115,8 @@ const seedDatabase = async (): Promise<void> => {
   switch (input.toLowerCase()) {
     case "y":
       console.log("🔄 Seeding the database...");
-      // await db.delete(users)
-
-      await resetDB("./main.db");
-      initializeDatabase();
-
-      const createUsersTableQuery = `
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY,
-      username TEXT NOT NULL,
-      password TEXT NOT NULL,
-      email TEXT NOT NULL,
-      role TEXT NOT NULL
-    )
-  `;
-      sqlite.exec(createUsersTableQuery);
-
-      void addUsers();
+      const db = await recreateDatabase();
+      await addUsers(db);
       console.log("✅ Database seeded successfully.");
       break;
     case "n":
