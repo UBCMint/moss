@@ -1,4 +1,4 @@
-import { db, sqlite } from "@/app/server/db/index";
+import { db, setDB } from "@/app/server/db/index";
 import { users } from "@/app/server/db/schema";
 import * as readline from "readline";
 import * as fs from "fs/promises";
@@ -90,7 +90,6 @@ async function recreateDatabase(): Promise<void> {
 
   // Initialize the database and create the users table
   const sqlite = new Database("main.db");
-  const db = drizzle(sqlite);
 
   const createUsersTableQuery = `
     CREATE TABLE IF NOT EXISTS users (
@@ -103,6 +102,11 @@ async function recreateDatabase(): Promise<void> {
   `;
   sqlite.exec(createUsersTableQuery);
   console.log("✅ Users table created successfully.");
+
+  const db = drizzle(sqlite);
+
+  setDB(db);
+
 }
 
 const seedDatabase = async (): Promise<void> => {
