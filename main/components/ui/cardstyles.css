@@ -1,0 +1,18 @@
+.card-background {
+    background-color: rgba(156, 200, 196, 1);
+}
+
+.card-active-border:active {
+    border-color: rgba(46, 123, 117, 1);
+    border-width: 2px; 
+    border-style: solid; 
+}
+
+.card-size {
+    width: 779px;
+    height: 159px;
+}
+
+.align-right {
+    align-items: flex-end;
+}
