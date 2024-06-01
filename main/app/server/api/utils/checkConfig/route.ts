@@ -9,7 +9,7 @@ import fs from 'fs'
  */
 export async function GET (request: Request, response: Response): Promise<Response> {
   try {
-    fs.readFileSync('./local.config.json')
+    fs.readFileSync('local.config.json')
     return NextResponse.json({ config: true }, { status: 200 })
   } catch (error) {
     return NextResponse.json({ config: false }, { status: 200 })

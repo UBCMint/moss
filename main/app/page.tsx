@@ -8,6 +8,7 @@ import { Transition } from '@tailwindui/react'
 import { useMutation } from '@tanstack/react-query'
 import Loading from '@/components/Loading'
 import { toast } from '@/components/ui/use-toast'
+import Configuration from '@/components/Onboarding/Configuration'
 
 // Different stages that occur
 // opening: The opening screen
@@ -56,6 +57,7 @@ export default function MainPage (): JSX.Element {
 
   return (
     <div className='z-10'>
+      {/* Opening page where user starts and calls mutation */}
       <Transition
         show={screen === 'opening'}
         enter="transition-opacity duration-300"
@@ -86,6 +88,7 @@ export default function MainPage (): JSX.Element {
           </div>
         </div>
       </Transition>
+      {/* Checks config, if present, user continues. If not create new. */}
       <Transition
         show={screen === 'checkConfig'}
         enter="transition-opacity duration-300"
@@ -100,7 +103,7 @@ export default function MainPage (): JSX.Element {
           {checkConfig.isError && <p>Error!</p>}
           {checkConfig.isSuccess && (
             <div>
-              <TextGenerateEffect words={`Config: ${checkConfig.data.config.toString()}`} className='scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl' />
+              <Configuration present={checkConfig.data.config} />
             </div>
           )}
         </div>
