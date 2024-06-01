@@ -103,7 +103,7 @@ export default function MainPage (): JSX.Element {
           {checkConfig.isError && <p>Error!</p>}
           {checkConfig.isSuccess && (
             <div>
-              <Configuration present={checkConfig.data.config} />
+              <Configuration present={Boolean(checkConfig.data.config)} />
             </div>
           )}
         </div>

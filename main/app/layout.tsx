@@ -7,6 +7,7 @@ import { TailwindIndicator } from '@/components/TailwindIndicator'
 import { cn } from '@/lib/utils'
 import { Toaster } from '@/components/ui/toaster'
 import { ReactQueryClientProvider } from '@/components/ReactQueryClientProvider'
+import { Toaster as SonnerToaster } from '@/components/ui/sonner'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -27,10 +28,11 @@ export default function RootLayout ({
     <ReactQueryClientProvider>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <body className={cn('min-h-screen bg-background font-sans antialiased',
+        <body className={cn('min-h-screen bg-background font-sans antialiased overflow-x-hidden',
           fontSans.variable)}>
           {children}
           <Toaster />
+          <SonnerToaster />
           <TailwindIndicator />
         </body>
       </html>

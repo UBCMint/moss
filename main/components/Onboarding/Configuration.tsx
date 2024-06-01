@@ -6,6 +6,7 @@ import Loading from '../Loading'
 import { Button } from '../ui/button'
 import { ChevronRightIcon } from '../Icons/Icons'
 import Link from 'next/link'
+import ConfigurationSetup from './ConfigurationSetup'
 
 interface ConfigTestProps {
   present: boolean
@@ -20,6 +21,7 @@ export default function Configuration ({
     queryKey: ['config'],
     queryFn: async () => {
       try {
+        console.log(present)
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_ROUTE}/utils/getConfig`,
           {
@@ -65,8 +67,8 @@ export default function Configuration ({
         </div>
           )
         : (
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <p className="text-lg font-semibold">Config is not present</p>
+        <div className="flex flex-col items-center justify-center w-full">
+          <ConfigurationSetup />
         </div>
           )}
     </div>
