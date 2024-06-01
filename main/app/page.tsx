@@ -9,6 +9,16 @@ import { useMutation } from '@tanstack/react-query'
 import Loading from '@/components/Loading'
 import { toast } from '@/components/ui/use-toast'
 import Configuration from '@/components/Onboarding/Configuration'
+import { toast as sonnerToast } from 'sonner'
+
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList
+} from '@/components/ui/command'
 
 // Different stages that occur
 // opening: The opening screen
@@ -17,11 +27,24 @@ type stageType = 'opening' | 'checkConfig'
 
 export default function MainPage (): JSX.Element {
   const [screen, setScreen] = React.useState<stageType>('opening')
+  const [open, setOpen] = React.useState(false)
 
   function onContinue (): void {
     setScreen('checkConfig')
     checkConfig.mutate()
   }
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent): void => {
+      if (e.key === 'j' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setOpen((open) => !open)
+      }
+    }
+
+    document.addEventListener('keydown', down)
+    return () => { document.removeEventListener('keydown', down) }
+  }, [])
 
   // Mutation that checks if local.config.json is present or not
   const checkConfig = useMutation({
@@ -29,13 +52,13 @@ export default function MainPage (): JSX.Element {
     mutationFn: async () => {
       try {
         const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_ROUTE}/utils/checkConfig`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
+          `${process.env.NEXT_PUBLIC_API_ROUTE}/utils/checkConfig`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
           }
-        }
         ).then(async (res) => await res.json())
         if (typeof (res.config) === 'boolean') {
           return res
@@ -51,6 +74,42 @@ export default function MainPage (): JSX.Element {
           })
         }
         throw new Error('Error in fetching config')
+      }
+    }
+  })
+
+  function deleteConfigFn (): void {
+    deleteConfig.mutate()
+  }
+
+  const deleteConfig = useMutation({
+    mutationKey: [],
+    mutationFn: async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_ROUTE}/utils/checkConfig`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        ).then(async (res) => await res.json())
+        if (typeof (res.message) === 'string') {
+          sonnerToast.success('Config deleted')
+          return res
+        } else {
+          throw new Error('Fetching error, message not string')
+        }
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          toast({
+            title: 'Error',
+            description: 'Error in deleting config',
+            variant: 'destructive'
+          })
+        }
+        throw new Error('Error in deleting config')
       }
     }
   })
@@ -109,6 +168,17 @@ export default function MainPage (): JSX.Element {
         </div>
       </Transition>
       <div className="absolute left-0 top-0 h-[100vh] w-full bg-off-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex items-center justify-center -z-10" />
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput placeholder="Type a command or search..." />
+        <CommandList>
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Suggestions">
+            <CommandItem >
+              <span onClick={() => { deleteConfigFn() }}>Delete Config</span>
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </CommandDialog>
     </div>
   )
 }
