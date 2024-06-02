@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { type NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 
 /**
@@ -22,12 +22,16 @@ export async function GET (request: Request, response: Response): Promise<Respon
  * @param {Response} response - The response object.
  * @returns {Promise<Response>} - A promise that resolves to the response object.
  */
-export async function POST (request: Request, response: Response): Promise<Response> {
-  const defaultConfig = {
-  }
+export async function POST (req: NextRequest, response: Response): Promise<Response> {
+  const data = await req.json()
+  const defaultConfig = data
 
   if (fs.existsSync('./local.config.json')) {
-    return NextResponse.json({ error: 'Config already exists' }, { status: 400 })
+    try {
+      fs.unlinkSync('./local.config.json')
+    } catch (error) {
+      return NextResponse.json({ error: 'Error in deleting config' }, { status: 500 })
+    }
   }
 
   try {

@@ -173,8 +173,8 @@ export default function MainPage (): JSX.Element {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem >
-              <span onClick={() => { deleteConfigFn() }}>Delete Config</span>
+            <CommandItem className='hover:bg-slate-700' onSelect={(value) => { deleteConfigFn() }}>
+              <span>Delete Config</span>
             </CommandItem>
           </CommandGroup>
         </CommandList>
