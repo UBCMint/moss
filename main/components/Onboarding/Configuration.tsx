@@ -55,7 +55,7 @@ export default function Configuration ({
                 <span className="text-xl lg:text-2xl">Welcome back</span>{' '}
                 <span className="text-mint-green">{configData.name}</span>
               </h1>
-              <Link href="/dashboard">
+              <Link href="/headsets">
                 <Button className="w-full max-w-[300px] p-8 rounded-full mt-4 items-center justify-center h-12 text-lg font-semibold text-white bg-mint-green hover:bg-mint-green-600 focus:outline-none focus:ring-2 focus:ring-mint-green-500 focus:ring-offset-2 focus:ring-offset-mint-green-200 hover:shadow-md hover:scale-105 transition duration-300 ease-in-out">
                   Go to Dashboard
                   <ChevronRightIcon className="w-6 h-6 ml-2" />
