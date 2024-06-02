@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Button } from "./button";
+import { DownloadIcon } from "lucide-react";
 
-const RunnerClip = () => {
+const RunnerClip = ({ title }: { title: string }) => {
   const [buttonState, setButtonState] = useState("Download");
 
   const handleClick = () => {
@@ -12,21 +14,23 @@ const RunnerClip = () => {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 border rounded shadow-md">
-      <div className="text-xl font-semibold">Title</div>
-      <button
+    <div className="flex items-center justify-between border rounded-lg w-[389px] h-[84px] py-[22px] px-[20px] text-[#3F3F4C]">
+      <div className="text-xl font-medium leading-none">{title}</div>
+      <Button
         onClick={handleClick}
-        className={`px-4 py-2 rounded ${
+        className={
           buttonState === "Download"
-            ? "bg-green-500 text-white"
+            ? "bg-[#9CC8C4] hover:bg-[#7daba7] text-[#3F3F4C] gap-[10px]"
             : buttonState === "Downloading"
-            ? "bg-gradient-to-r from-green-500 to-white text-black"
-            : "bg-green-500 text-white"
-        }`}
-        disabled={buttonState === "Use"}
+            ? "bg-gradient-to-r from-[#9CC8C4] to-white text-[#3F3F4C]"
+            : "bg-[#9CC8C4] hover:bg-[#7daba7] text-[#3F3F4C]"
+        }
       >
         {buttonState}
-      </button>
+        {buttonState === "Download" && (
+          <DownloadIcon className="w-[20px] h-[20px]" />
+        )}
+      </Button>
     </div>
   );
 };
