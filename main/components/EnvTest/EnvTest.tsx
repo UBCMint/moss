@@ -44,11 +44,11 @@ const EnvTest: React.FC = () => {
         ? (<p>Loading...</p>)
         : (response.error != null)
             ? (<div style={{ backgroundColor: 'red', color: 'white', fontWeight: 'bold', padding: '10px', borderRadius: '5px' }}>
-                  Error: {response.error}
-                </div>)
+            Error: {response.error}
+          </div>)
             : (<div style={{ backgroundColor: 'green', color: 'white', fontWeight: 'bold', padding: '10px', borderRadius: '5px' }}>
-                      .ENV Config Working
-                    </div>
+            .ENV Config Working
+          </div>
               )}
     </div>
   )
