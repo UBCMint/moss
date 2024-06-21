@@ -1,9 +1,8 @@
 "use client";
 
-interface FileUploadProgress {
-  progress: number;
-  File: File;
-}
+import { Input } from "@/components/ui/input";
+import React, { useState, ChangeEvent } from "react";
+import TableComp from "../FormatComponents/CSV/TableComp";
 
 enum FileTypes {
   Csv = "csv",
@@ -11,9 +10,55 @@ enum FileTypes {
 }
 
 export default function DataFormatChooser() {
+  const [file, setFile] = useState<File | null>(null);
+  const [fileType, setFileType] = useState<FileTypes | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) {
+      setErrorMessage("Please select a file.");
+      return;
+    }
+
+    if (selectedFile.type.includes(FileTypes.Csv)) {
+      setFileType(FileTypes.Csv);
+      setFile(selectedFile);
+      setErrorMessage("");
+    } else if (selectedFile.type.includes(FileTypes.Edf)) {
+      setFileType(FileTypes.Edf);
+      setFile(selectedFile);
+      setErrorMessage("");
+    } else {
+      setErrorMessage("Unsupported file format");
+      return;
+    }
+  };
+
+  const renderDataView = () => {
+    switch (fileType) {
+      case FileTypes.Csv:
+        return <TableComp file={file as File} />;
+      case FileTypes.Edf:
+        // return <EDFComponent file={file as File} />;
+        return <div>EDF file format support coming soon!</div>;
+      default:
+        return <div>Unsupported file format</div>;
+    }
+  };
+
   return (
-    <h1>
-      This will select which datat type and route it to the correct component
-    </h1>
-  )
+    <div>
+      <Input
+        type="file"
+        onChange={handleFileUpload}
+        accept=".csv,.edf"
+        style={{ marginBottom: "10px" }}
+      />
+      {errorMessage && (
+        <div style={{ color: "red", marginBottom: "10px" }}>{errorMessage}</div>
+      )}
+      {file && renderDataView()}
+    </div>
+  );
 }
