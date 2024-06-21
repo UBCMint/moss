@@ -1,0 +1,11 @@
+{
+  "basetypes": {
+    "csv": {
+      "name": "csv",
+      "description": "Comma-separated values",
+      "extension": "csv"
+    }
+  },
+  "customtypes": {
+  }
+}

@@ -16,6 +16,8 @@
     ],
     "rules": {
         "quotes": "off",
-        "@typescript-eslint/quotes": "error"
-    }
+        "@typescript-eslint/quotes": "error",
+        "semi": "off"
+    },
+    "eslint.validate": [ "javascript", "javascriptreact", "html", "typescriptreact" ]
 }

@@ -42,9 +42,9 @@ export default function MainPage (): JSX.Element {
   return (
     <div className='z-10'>
         <div className="flex flex-col h-screen justify-center items-center">
-          {checkConfig.isPending && <Loading />}
-          {checkConfig.isError && <p>Error!</p>}
-          {checkConfig.isSuccess && (
+          {(Boolean(checkConfig.isPending)) && <Loading />}
+          {(Boolean(checkConfig.isError)) && <p>Error!</p>}
+          {(Boolean(checkConfig.isSuccess)) && (
             <div>
               <ConfigTest present={checkConfig.data.config} />
             </div>
