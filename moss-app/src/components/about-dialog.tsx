@@ -68,7 +68,7 @@ export function AboutDialog() {
         </DialogTitle>
 
         <DialogDescription className=" text-foreground">
-          Tauri-ui description.
+          MOSS is a desktop application for visualizing brainwaves.
         </DialogDescription>
 
         <span className="text-xs text-gray-400">{updateText}</span>

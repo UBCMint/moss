@@ -8,7 +8,6 @@ import { Toaster as SonnerToaster } from '@/components/ui/sonner'
 import { Toaster } from '@/components/ui/toaster'
 import { cn } from '@/lib/utils'
 
-
 import { Greeting } from "@/components/greeting"
 import { Menu } from "@/components/menu"
 import { StyleSwitcher } from "@/components/style-switcher"

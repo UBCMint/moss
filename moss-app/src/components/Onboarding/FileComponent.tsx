@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import { ChevronRightIcon, FolderIcon } from '../Icons/Icons'
 import { Button } from '../ui/button'
 

@@ -1,9 +1,5 @@
 "use client"
 
-import logo from "@/assets/logo.png"
-import { Sailboat } from "lucide-react"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
 import { useCallback } from "react"
 import { WindowTitlebar } from "tauri-controls"
 
@@ -18,6 +14,7 @@ import {
 } from "@/components/ui/menubar"
 
 import { AboutDialog } from "./about-dialog"
+import { MintLogo } from "./Icons/Icons"
 import { MenuModeToggle } from "./menu-mode-toggle"
 import { Dialog, DialogTrigger } from "./ui/dialog"
 
@@ -35,13 +32,8 @@ export function Menu() {
     >
       <Menubar className="rounded-none border-b border-none pl-2 lg:pl-3">
         <MenubarMenu>
-          {/* App Logo */}
           <div className="inline-flex h-fit w-fit items-center text-cyan-500">
-            {usePathname() === "/" || usePathname() === "/examples/music" ? (
-              <Image src={logo} alt="logo" width={20} height={20} />
-            ) : (
-              <Sailboat className="h-5 w-5" />
-            )}
+            <MintLogo className="h-6 w-6" />
           </div>
         </MenubarMenu>
 
@@ -58,15 +50,9 @@ export function Menu() {
                 Preferences... <MenubarShortcut>⌘,</MenubarShortcut>
               </MenubarItem>
               <MenubarSeparator />
-              <MenubarItem>
-                Hide Music... <MenubarShortcut>⌘H</MenubarShortcut>
-              </MenubarItem>
-              <MenubarItem>
-                Hide Others... <MenubarShortcut>⇧⌘H</MenubarShortcut>
-              </MenubarItem>
               <MenubarShortcut />
               <MenubarItem onClick={closeWindow}>
-                Quit Music <MenubarShortcut>⌘Q</MenubarShortcut>
+                Quit App <MenubarShortcut>⌘Q</MenubarShortcut>
               </MenubarItem>
             </MenubarContent>
 
