@@ -44,3 +44,5 @@ local.config.json
 # Tauri
 target/
 dist/
+
+*storybook.log
