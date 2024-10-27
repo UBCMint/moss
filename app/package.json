@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev -p 1420",
     "next-build": "next build",
+    "next-start": "next dev",
     "tauri": "tauri",
     "build": "tauri build",
     "tauri dev": "tauri dev",
     "lint": "next lint && biome check src/",
-    "build-storybook": "sb build"
+    "build-storybook": "storybook build",
+    "storybook": "storybook dev -p 6006"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -100,11 +102,18 @@
     "cssnano": "^7.0.6",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.11",
+    "eslint-plugin-storybook": "^0.10.1",
     "lint-staged": "^15.2.10",
     "postcss": "^8.4.47",
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.0",
+    "storybook": "8.3.6",
     "tailwindcss": "^3.4.11",
     "typescript": "^5.6.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:storybook/recommended"
+    ]
   }
 }
