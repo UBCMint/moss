@@ -21,7 +21,7 @@ export default function MyApp({ children }: ExamplesLayoutProps) {
     <html lang="en" suppressHydrationWarning className="overflow-clip bg-black">
       <head />
       <ReactQueryClientProvider>
-      <body className="overflow-clip bg-transparent font-sans antialiased scrollbar-none">
+      <body className="overflow-clip bg-transparent antialiased scrollbar-none">
         <Greeting />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="h-screen overflow-clip">
