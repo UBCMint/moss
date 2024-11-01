@@ -46,3 +46,6 @@ target/
 dist/
 
 *storybook.log
+
+# eslint problem for mac?
+.eslintrc.json
